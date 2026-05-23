@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+body {
+    background-image: 
+        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        url("https://wallpapers.com/images/hd/profile-background-bddar8tgx7ymbl1m.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.profile-box {
+    width: 400px;
+    margin: 60px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.profile-box h2 {
+    margin-bottom: 20px;
+}
+
+.profile-info {
+    text-align: left;
+    margin-top: 20px;
+}
+
+.profile-info p {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+</style>
+
+<div class="profile-box">
+    <h2>👤 User Profile</h2>
+
+    <div class="profile-info">
+        <p><strong>Username:</strong> {{ user.username }}</p>
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Phone:</strong> {{ profile.phone }}</p>
+    </div>
+</div>
+<a href="{% url 'dashboard' %}" 
+   style="
+   display: inline-block;
+   margin-top: 20px;
+   padding: 10px 15px;
+   background: #4f46e5;
+   color: white;
+   text-decoration: none;
+   border-radius: 8px;
+   font-weight: bold;
+   transition: 0.3s;
+   "
+   onmouseover="this.style.background='#4338ca'"
+   onmouseout="this.style.background='#4f46e5'">
+   ⬅ Back to Dashboard
+</a>
+{% endblock %}

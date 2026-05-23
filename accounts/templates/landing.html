@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+body {
+    background-image: 
+        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        url("https://content.cloudthat.com/resources/wp-content/uploads/2022/12/AI-ML-Using-Azure-Cognitive-Services.png");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+/* 🌈 Hero Section */
+.hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px;
+}
+
+/* ✨ Glass Card */
+.hero-box {
+    max-width: 700px;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(12px);
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.1);
+}
+
+/* 🎯 Title */
+.hero-box h1 {
+    font-size: 42px;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, #6366f1, #9333ea);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* 📄 Subtitle */
+.hero-box p {
+    color: #555;
+    font-size: 16px;
+    margin-bottom: 25px;
+}
+
+/* 🚀 Buttons */
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-primary {
+    padding: 12px 25px;
+    border-radius: 25px;
+    background: linear-gradient(90deg, #6366f1, #7c3aed);
+    color: white;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.3s;
+    box-shadow: 0 5px 15px rgba(99,102,241,0.4);
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(99,102,241,0.5);
+}
+
+.btn-outline {
+    padding: 12px 25px;
+    border-radius: 25px;
+    border: 2px solid #6366f1;
+    color: #6366f1;
+    text-decoration: none;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.btn-outline:hover {
+    background: #6366f1;
+    color: white;
+}
+
+/* 📱 Responsive */
+@media (max-width: 600px) {
+    .hero-box h1 {
+        font-size: 30px;
+    }
+}
+</style>
+
+<div class="hero">
+    <div class="hero-box">
+
+        <h1> ML Projects Hub</h1>
+        <p>
+            Explore powerful machine learning applications with real-time predictions,
+            smart analytics, and interactive dashboards.
+        </p>
+
+        <div class="buttons">
+            <a href="{% url 'login' %}" class="btn-primary">Login</a>
+            <a href="{% url 'signup' %}" class="btn-outline">Create Account</a>
+        </div>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,147 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<style>
+body {
+    background-image: 
+        linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)),
+        url("https://wallpapercave.com/wp/wp9764014.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.signup-container {
+    width: 400px;
+    margin: 80px auto;
+    background: #f2f2f2;
+    padding: 40px 30px;
+    border-radius: 25px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    text-align: center;
+}
+
+.signup-container h2 {
+    margin-bottom: 25px;
+}
+
+.input-group {
+    display: flex;
+    align-items: center;
+    background: #e6e6e6;
+    border-radius: 30px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+    box-shadow: inset 3px 3px 6px rgba(0,0,0,0.1),
+                inset -3px -3px 6px rgba(255,255,255,0.7);
+}
+
+.input-group span {
+    margin-right: 10px;
+    font-size: 18px;
+}
+
+.input-group input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 100%;
+    font-size: 14px;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    font-size: 13px;
+    margin: 15px 0;
+    justify-content: center;
+}
+
+.checkbox input {
+    margin-right: 8px;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    border-radius: 25px;
+    border: none;
+    background: linear-gradient(90deg, #7b2ff7, #5f0fd6);
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 10px;
+    box-shadow: 0 5px 15px rgba(123,47,247,0.4);
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+.footer-text {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.footer-text a {
+    color: #5f0fd6;
+    text-decoration: none;
+}
+.error {
+    color: red;
+    margin-bottom: 10px;
+}
+</style>
+
+<div class="signup-container">
+    <h2>Sign Up</h2>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="input-group">
+            <span>👤</span>
+            <input type="text" name="username" placeholder="Name" required>
+        </div>
+
+        <div class="input-group">
+            <span>📧</span>
+            <input type="email" name="email" placeholder="E-mail" required>
+        </div>
+
+        <div class="input-group">
+            <span>📱</span>
+            <input type="text" name="phone" placeholder="Phone Number" required>
+        </div>
+
+        <div class="input-group">
+            <span>🔒</span>
+            <input type="password" name="password" placeholder="Password" required>
+        </div>
+
+        <div class="input-group">
+            <span>🔒</span>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+        </div>
+
+        <div class="checkbox">
+            <input type="checkbox" required>
+            <label>I read and agree to Terms & Conditions</label>
+        </div>
+
+        <button type="submit">CREATE ACCOUNT</button>
+    </form>
+
+    <div class="footer-text">
+        Already have an account? <a href="{% url 'login' %}">Sign in</a>
+    </div>
+</div>
+
+{% endblock %}

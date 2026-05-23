@@ -1,0 +1,206 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial;
+    background:
+        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+        url("https://hrone.cloud/wp-content/uploads/2023/01/14-Remarkable-Tips-to-Make-Your-Workplace-Burnout-Free-for-Your-Employees-1568x882.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* MAIN DASHBOARD LAYOUT */
+.dashboard {
+    display: flex;
+    height: 100vh;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* LEFT PANEL - INPUT */
+.left-panel {
+    width: 40%;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(18px);
+    padding: 20px;
+    border-radius: 20px;
+    color: white;
+    overflow: hidden;
+}
+
+/* RIGHT PANEL - ANALYTICS */
+.right-panel {
+    width: 60%;
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(18px);
+    padding: 20px;
+    border-radius: 20px;
+    color: white;
+    overflow: hidden;
+}
+
+/* GRID INPUT */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+input, select {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+}
+
+/* BUTTON */
+button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(90deg, #6366f1, #7c3aed);
+    color: white;
+    font-weight: bold;
+}
+
+/* RESULT BOX */
+.result-box {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.15);
+}
+
+/* MODEL BARS */
+.bar {
+    margin: 6px 0;
+    padding: 6px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.15);
+}
+
+.bar.best {
+    background: #22c55e;
+}
+
+/* CHART */
+canvas {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 15px;
+}
+
+/* TITLE */
+h2, h3 {
+    margin-top: 0;
+}
+
+</style>
+
+<div class="dashboard">
+
+    <!-- LEFT SIDE -->
+    <div class="left-panel">
+
+        <h2>🔥 Burnout Prediction</h2>
+
+        <p><b>Best Model:</b> {{ best_name }}</p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-grid">
+
+                <input name="work_hours" placeholder="Work Hours">
+                <input name="screen_time_hours" placeholder="Screen Time">
+                <input name="meetings_count" placeholder="Meetings">
+                <input name="breaks_taken" placeholder="Breaks">
+                <input name="after_hours_work" placeholder="After Hours">
+                <input name="sleep_hours" placeholder="Sleep">
+                <input name="task_completion_rate" placeholder="Task %">
+
+                <select name="day_type">
+                    <option>Weekday</option>
+                    <option>Weekend</option>
+                </select>
+
+            </div>
+
+            <button type="submit">Predict Burnout</button>
+        </form>
+
+        {% if result %}
+        <div class="result-box">
+            🔥 Result: <b>{{ result }}</b>
+        </div>
+        {% endif %}
+        <h3>🧠 AI Insight</h3>
+        <p>
+            This system analyzes working behavior patterns and predicts burnout risk using ML models.
+            Random Forest gives the highest accuracy due to better handling of feature interactions.
+        </p>
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="right-panel">
+
+        <h2>📊 Model Analytics</h2>
+
+        <div class="bar">Random Forest - 91%</div>
+        <div class="bar">Decision Tree - 84%</div>
+        <div class="bar">KNN - 79%</div>
+        <div class="bar best">🏆 Best: Random Forest</div>
+
+        <canvas id="burnoutChart"></canvas>
+
+        <script>
+        new Chart(document.getElementById('burnoutChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Random Forest', 'Decision Tree', 'KNN'],
+                datasets: [{
+                    label: 'Accuracy %',
+                    data: [91, 84, 79],
+                    backgroundColor: '#6366f1'
+                }]
+            }
+        });
+        </script>
+
+        
+
+    </div>
+
+</div>
+<div style="text-align:center; margin-top:25px;">
+    <a href="{% url 'dashboard' %}" 
+       style="
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:12px 22px;
+            background: linear-gradient(90deg, #1e3a8a, #6366f1);
+            color:white;
+            text-decoration:none;
+            border-radius:12px;
+            font-weight:600;
+            box-shadow:0 8px 20px rgba(99,102,241,0.5);
+            transition:0.3s;
+       "
+       onmouseover="this.style.transform='scale(1.05)'"
+       onmouseout="this.style.transform='scale(1)'">
+        ⬅ Return to Dashboard
+    </a>
+</div>
+
+{% endblock %}

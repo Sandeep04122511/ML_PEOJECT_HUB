@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Deepfake Detector</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+       body {
+    height: 100vh;
+
+    background: 
+        linear-gradient(rgba(15, 23, 42, 0.6), rgba(2, 6, 23, 0.8)),
+        url("https://blog.iil.com/wp-content/uploads/2022/10/AI_1.jpg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    overflow: hidden;
+}
+
+        .main-container {
+            width: 900px;
+            max-height: 90vh; /* keep everything inside screen */
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 22px;
+            background: linear-gradient(90deg, #22c55e, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .content {
+            display: flex;
+            gap: 15px;
+            height: 70vh; /* fixed content height */
+        }
+
+        .left, .right {
+            flex: 1;
+            background: rgba(255,255,255,0.08);
+            padding: 15px;
+            border-radius: 15px;
+            overflow-y: auto; /* scroll inside box only */
+        }
+
+        .left {
+            text-align: center;
+        }
+
+        input[type="file"] {
+            margin-top: 10px;
+            width: 100%;
+            padding: 8px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255,255,255,0.1);
+            color: white;
+        }
+
+        button {
+            margin-top: 10px;
+            padding: 10px;
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #22c55e, #4ade80);
+            color: black;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        /* 🔥 FIXED IMAGE SIZE */
+        img {
+            margin-top: 10px;
+            max-height: 500px;   /* limit height */
+            width: auto;
+            max-width: 100%;
+            border-radius: 10px;
+            border: 2px solid rgba(255,255,255,0.2);
+            object-fit: contain;
+        }
+
+        .confidence-bar {
+            height: 8px;
+            border-radius: 10px;
+            margin: 6px 0;
+            background: #1e293b;
+            overflow: hidden;
+        }
+
+        .confidence-fill-real {
+            height: 100%;
+            background: #22c55e;
+        }
+
+        .confidence-fill-fake {
+            height: 100%;
+            background: #ef4444;
+        }
+
+        .back-btn {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            padding: 8px;
+            background: linear-gradient(90deg, #6366f1, #3b82f6);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-weight: bold;
+        }
+        /* Status Badge */
+.status-badge {
+    text-align: center;
+    padding: 8px;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.status-badge.real {
+    background: #22c55e;
+}
+
+.status-badge.fake {
+    background: #ef4444;
+}
+
+/* Circle */
+.circle-container {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.circle {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: conic-gradient(#22c55e {{ real_conf }}%, #1e293b 0%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: auto;
+    font-weight: bold;
+}
+
+/* Insight Box */
+.insight-box {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 10px;
+    font-size: 14px;
+}
+
+/* Meta Info */
+.meta {
+    margin-top: 10px;
+    font-size: 13px;
+    opacity: 0.8;
+}
+.ai-message {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.08);
+    font-size: 14px;
+    line-height: 1.5;
+    border-left: 4px solid #22c55e;
+}
+
+.ai-message p {
+    margin: 0;
+}
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content {
+                flex-direction: column;
+                height: auto;
+            }
+
+            .main-container {
+                max-height: none;
+            }
+        }
+
+    </style>
+</head>
+
+<body>
+
+<div class="main-container">
+
+    <h2>🤖 AI Deepfake Detector</h2>
+
+    <div class="content">
+
+        <!-- LEFT SIDE -->
+        <div class="left">
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <input type="file" name="image" required>
+                <button type="submit">Analyze Image</button>
+            </form>
+
+            {% if image_url %}
+                <img src="{{ image_url }}" alt="Uploaded Image">
+            {% endif %}
+
+        </div>
+
+        <!-- RIGHT SIDE -->
+        <div class="right">
+
+            {% if label %}
+                <h3>Result: {{ label }}</h3>
+
+                <p>Real Confidence: {{ real_conf }}%</p>
+                <div class="confidence-bar">
+                    <div class="confidence-fill-real" style="width: {{ real_conf }}%"></div>
+                </div>
+
+                <p>Fake Confidence: {{ fake_conf }}%</p>
+                <div class="confidence-bar">
+                    <div class="confidence-fill-fake" style="width: {{ fake_conf }}%"></div>
+                </div>
+
+                <p><strong>Threat Level:</strong> {{ level }}</p>
+                <div class="ai-message">
+    {% if label == "Fake" %}
+        <p>
+            ⚠️ <strong>Alert:</strong> This image is likely AI-generated or manipulated. 
+            Our model has detected inconsistencies in facial features, texture patterns, 
+            and lighting conditions that are commonly found in deepfake content. 
+            Please verify the source before trusting or sharing this image.
+        </p>
+    {% elif label == "Real" %}
+        <p>
+            ✅ <strong>Authentic:</strong> This image appears to be genuine. 
+            The facial structure, texture, and lighting patterns are consistent 
+            with real human features. However, always cross-check critical media 
+            for complete assurance.
+        </p>
+    {% endif %}
+</div>
+            {% else %}
+                <p style="text-align:center; opacity:0.7;">
+                    Upload an image to see results here
+                </p>
+            {% endif %}
+
+        </div>
+            
+    <!-- Status Badge of uploaded image  -->
+    <div class="right">
+    {% if label %}
+
+        <!-- Status Badge -->
+        <div class="status-badge {{ label|lower }}">
+            {{ label }}
+        </div>
+
+        <!-- Confidence Circle -->
+        <div class="circle-container">
+            <div class="circle">
+                {{ real_conf }}%
+            </div>
+            <p>Real Probability</p>
+        </div>
+
+        <!-- Bars -->
+        <p>Real Confidence</p>
+        <div class="confidence-bar">
+            <div class="confidence-fill-real" style="width: {{ real_conf }}%"></div>
+        </div>
+
+        <p>Fake Confidence</p>
+        <div class="confidence-bar">
+            <div class="confidence-fill-fake" style="width: {{ fake_conf }}%"></div>
+        </div>
+
+        <!-- AI Insight -->
+        <div class="insight-box">
+            <p>
+                🧠 AI Analysis: 
+                This image is detected as <strong>{{ label }}</strong> 
+                with {{ real_conf }}% confidence. 
+                The model analyzed facial patterns, textures, and inconsistencies.
+            </p>
+        </div>
+
+        <!-- Extra Info -->
+        <div class="meta">
+            <p>⚙ Model: CNN (MobileNetV2)</p>
+            <p>⏱ Time: ~1.2s</p>
+            <p>🔍 Threat Level: {{ level }}</p>
+        </div>
+
+    {% else %}
+        <p style="text-align:center; opacity:0.7;">
+            Upload an image to see AI analysis
+        </p>
+    {% endif %}
+
+</div>
+
+    </div>
+
+    <a href="{% url 'dashboard' %}" class="back-btn">⬅ Back to Dashboard</a>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,246 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ML Hub</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+
+            background-image:
+                linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+                url("https://media.istockphoto.com/id/1470617656/vector/ai-artificial-intelligence-chipset-on-circuit-board-in-futuristic-concept-suitable-for.jpg?s=612x612&w=0&k=20&c=_wC-pphyNI2muaUHG4N9JuYXxJEMDuzx56Dvzr8ZDUk=");
+
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        /* NAVBAR */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 50px;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-size: 22px;
+            background: linear-gradient(90deg, #6366f1, #9333ea);
+
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .nav-right span {
+            font-size: 14px;
+            color: #444;
+        }
+
+        /* BUTTONS */
+        .btn {
+            padding: 8px 18px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-block;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: linear-gradient(90deg, #6366f1, #7c3aed);
+            color: white;
+            box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(99, 102, 241, 0.5);
+        }
+
+        .btn-light {
+            background: #f1f5f9;
+            color: #333;
+        }
+
+        .btn-light:hover {
+            background: #e2e8f0;
+        }
+
+        /* DROPDOWN */
+        .nav-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .nav-dropdown-content {
+            display: none;
+            position: absolute;
+            top: 45px;
+            right: 0;
+            background: white;
+            min-width: 240px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            z-index: 1000;
+        }
+
+        .nav-dropdown-content a {
+            display: block;
+            padding: 14px 18px;
+            text-decoration: none;
+            color: #333;
+            transition: 0.3s;
+            font-size: 14px;
+        }
+
+        .nav-dropdown-content a:hover {
+            background: #f3f4f6;
+            padding-left: 24px;
+        }
+
+        /* SHOW DROPDOWN */
+        .nav-dropdown:hover .nav-dropdown-content {
+            display: block;
+        }
+
+        /* CONTAINER */
+        .container {
+            padding: 50px;
+            animation: fadeIn 0.6s ease-in-out;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        /* ANIMATION */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* MOBILE */
+        @media (max-width: 600px) {
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            .nav-right {
+                gap: 8px;
+            }
+
+            .nav-dropdown-content {
+                right: -20px;
+            }
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <div class="navbar">
+
+        <h2>ML Projects Hub</h2>
+
+        <div class="nav-right">
+
+            {% if user.is_authenticated %}
+
+                <span>👋 {{ user.username }}</span>
+
+                <!-- ML PROJECTS BUTTON -->
+                <div class="nav-dropdown">
+
+                    <button class="btn btn-primary">
+                        ML-PROJECTS ▼
+                    </button>
+
+                    <!-- DROPDOWN MENU -->
+                    <div class="nav-dropdown-content">
+
+                        <a href="{% url 'cinnamon' %}">
+                            🧪 Cinnamon Quality
+                        </a>
+
+                        <a href="{% url 'burnout' %}">
+                            💼 Employee Burnout
+                        </a>
+
+                        <a href="{% url 'AI' %}">
+                            🤖 AI Deepfake Detector
+                        </a>
+
+                    </div>
+
+                </div>
+
+                <a href="{% url 'profile' %}" class="btn btn-primary">
+                    Profile
+                </a>
+
+                <a href="{% url 'logout' %}" class="btn btn-light">
+                    Logout
+                </a>
+
+            {% else %}
+
+                <a href="{% url 'login' %}" class="btn btn-primary">
+                    Login
+                </a>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    <!-- PAGE CONTENT -->
+    <div class="container">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+
+</html>

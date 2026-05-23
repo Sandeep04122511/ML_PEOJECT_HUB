@@ -1,0 +1,252 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+body {
+    margin: 0;
+    font-family: Arial;
+    background:
+        linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+        url("https://www.cylonies.com/storage/blogs/cinnamon-stick2-1024x1024.jpg");
+    background-size: cover;
+    background-attachment: fixed;
+}
+
+/* DASHBOARD LAYOUT */
+.dashboard {
+    display: flex;
+    height: 100vh;
+    gap: 20px;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* LEFT PANEL */
+.left-panel {
+    width: 40%;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+}
+
+/* RIGHT PANEL */
+.right-panel {
+    width: 60%;
+    background: rgba(255,255,255,0.10);
+    backdrop-filter: blur(18px);
+    border-radius: 20px;
+    padding: 20px;
+    color: white;
+}
+.ai-insight {
+    margin-top: 20px;
+    padding: 15px;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.12);
+    backdrop-filter: blur(10px);
+    color: white;
+    line-height: 1.6;
+}
+
+.ai-insight h3 {
+    margin-bottom: 10px;
+    color: #22c55e;
+}
+
+.ai-insight hr {
+    border: 0;
+    height: 1px;
+    background: rgba(255,255,255,0.2);
+    margin: 10px 0;
+}
+/* INPUT GRID */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+input {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+}
+
+/* BUTTON */
+button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(90deg, #22c55e, #16a34a);
+    color: white;
+    font-weight: bold;
+}
+
+/* RESULT */
+.result-box {
+    margin-top: 15px;
+    padding: 12px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.15);
+}
+
+/* MODEL BAR */
+.bar {
+    margin: 6px 0;
+    padding: 6px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.15);
+}
+
+.bar.best {
+    background: #22c55e;
+}
+
+/* CHART */
+canvas {
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    margin-top: 15px;
+}
+
+</style>
+
+<div class="dashboard">
+
+    <!-- LEFT SIDE (INPUT) -->
+    <div class="left-panel">
+
+        <h2>🌿 Cinnamon Prediction</h2>
+
+        <p><b>Best Model:</b> {{ model }}</p>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="form-grid">
+
+                <input name="moisture" placeholder="Moisture">
+                <input name="ash" placeholder="Ash">
+                <input name="volatile_oil" placeholder="Volatile Oil">
+                <input name="acid_insoluble_ash" placeholder="Acid Ash">
+                <input name="chromium" placeholder="Chromium">
+                <input name="coumarin" placeholder="Coumarin">
+
+            </div>
+
+            <button type="submit">Predict Quality</button>
+        </form>
+
+        {% if result %}
+        <div class="result-box">
+            🔎 Result: <b>{{ result }}</b>
+        </div>
+        {% endif %}
+        <h3>🧠 AI Insight</h3>
+        {% if result %}
+<div class="result-box">
+
+    🔎 Prediction Result: 
+    <b style="font-size:18px;">
+        {{ result }}
+    </b>
+
+    <hr style="margin:10px 0; opacity:0.3;">
+
+    <!-- AI INSIGHT -->
+    <h4>🤖 AI Insight</h4>
+
+    {% if result == "High" %}
+        <p style="color:#22c55e;">
+            ✔ High Quality Cinnamon<br>
+            → Best grade, strong aroma & low impurities
+        </p>
+
+    {% elif result == "Medium" %}
+        <p style="color:#facc15;">
+            ⚠ Medium Quality Cinnamon<br>
+            → Acceptable quality but some impurities present
+        </p>
+
+    {% else %}
+        <p style="color:#ef4444;">
+            ❌ Low Quality Cinnamon<br>
+            → Poor quality, high impurities detected
+        </p>
+    {% endif %}
+
+</div>
+{% endif %}
+    </div>
+
+    <!-- RIGHT SIDE (ANALYTICS) -->
+    <div class="right-panel">
+
+        <h2>📊 Model Performance</h2>
+
+        <div class="bar">Logistic Regression - 72%</div>
+        <div class="bar best">Random Forest - 89% 🏆</div>
+        <div class="bar">Decision Tree - 76%</div>
+        <div class="bar">KNN - 78%</div>
+
+        <p><b>🏆 Best Model: Random Forest</b></p>
+
+        <!-- GRAPH -->
+        <canvas id="cinnamonChart"></canvas>
+
+        <script>
+        new Chart(document.getElementById('cinnamonChart'), {
+            type: 'bar',
+            data: {
+                labels: ['Logistic Regression', 'Random Forest', 'Decision Tree', 'KNN'],
+                datasets: [{
+                    label: 'Accuracy %',
+                    data: [72, 89, 76, 78],
+                    backgroundColor: '#22c55e'
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+        </script>
+
+        <center>
+            <h3>Sandeep S K</h3>
+        </center>
+
+    </div>
+
+</div>
+<div style="text-align:center; margin-top:25px;">
+    <a href="{% url 'dashboard' %}" 
+       style="
+            display:inline-flex;
+            align-items:center;
+            gap:8px;
+            padding:12px 22px;
+            background: linear-gradient(90deg, #1e3a8a, #6366f1);
+            color:white;
+            text-decoration:none;
+            border-radius:12px;
+            font-weight:600;
+            box-shadow:0 8px 20px rgba(99,102,241,0.5);
+            transition:0.3s;
+       "
+       onmouseover="this.style.transform='scale(1.05)'"
+       onmouseout="this.style.transform='scale(1)'">
+        ⬅ Return to Dashboard
+    </a>
+</div>
+
+{% endblock %}
